@@ -159,5 +159,48 @@ def delete_employee(emp_id, db):
     except Exception as e:
         db.rollback()
         return {"message": f"Error occurred: {str(e)}"}
-                
+    
+def add_user_orm(employee, db):
+    try:
+        existing_employee = db.query(Employee).filter(
+            Employee.email == employee.email
+            ).first()
+        if existing_employee:
+            return{
+                "message": "Email already exists"
+            }
+        
+        new_employee = Employee(
+            first_name = employee.first_name,
+            last_name = employee.last_name,
+            age = employee.age,
+            mobile = employee.mobile,
+            salary = employee.salary,
+            post = employee.post,
+            email = employee.email
+        )
+        db.add(new_employee)
+
+        db.flush()
+
+        new_employee_details = EmployeeDetails(
+            emp_id = new_employee.id,
+            emp_address = employee.emp_address,
+            emp_college = employee.emp_college
+        )
+
+        db.add(new_employee_details)
+        
+        db.commit()
+
+        return {
+            "message": "Employee added using ORM",
+            "employee_id": new_employee.id
+        }                
+    except Exception as e:
+        db.rollback()
+
+        return{
+            "message": f"Error occurred: {str(e)}"
+        }
         

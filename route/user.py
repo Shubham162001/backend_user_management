@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
 from sqlalchemy.orm import Session
 from db_utils.get_db import get_db
-from controller.user import add_user,get_user_info, update_user, get_all_users, delete_employee
+from controller.user import add_user,get_user_info, update_user, get_all_users, delete_employee, add_user_orm
 from fastapi import HTTPException
 from models.pydantic_models import Employee,EmployeeVerify
 
@@ -16,6 +16,18 @@ def add_employee(
     try:
         result = add_user(employee, db)
         return result
+    except Exception as e:
+        return {"message": f"Error occurred: {str(e)}"}
+    
+@user_router.post("/add_employee_orm")
+def add_employee_orm(
+    employee: Employee,
+    db: Session = Depends(get_db)
+):
+    try:
+        result = add_user_orm(employee, db)
+        return result
+    
     except Exception as e:
         return {"message": f"Error occurred: {str(e)}"}
     
@@ -79,7 +91,3 @@ def delete_employee_route(
         return {"message": "Error occured: {str(e)}"}
 
 
-
-## Delete API which will delete all the data for given user id from bth employee and employee_address table try using SQL Alchemy Models dont use Simple SQL query
-    
-## Add Employe API : And if Similar Email ID is passed then it should return the message that email id is already exist and it should not add the data to database.

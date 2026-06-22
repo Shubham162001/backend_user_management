@@ -20,3 +20,8 @@ def insert_params(user):
     db.execute(text(query),params = dict)
     db.commit()
     return {"msg" : "data inserted sucesfukyy":}
+
+
+    ## Delete API which will delete all the data for given user id from bth employee and employee_address table try using SQL Alchemy Models dont use Simple SQL query
+    
+## Add Employe API : And if Similar Email ID is passed then it should return the message that email id is already exist and it should not add the data to database.
